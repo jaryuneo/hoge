@@ -15,6 +15,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 #https://qiita.com/sodaihirai/items/caf8d39d314fa53db4db
 #https://qiita.com/hatorijobs/items/1cae1946656ece954c63
 #https://deepblue-ts.co.jp/git/git-push-error/
+#https://qiita.com/yu_s1127/items/f9a5f7f075225ff90a95
 
 from pathlib import Path
 import os
