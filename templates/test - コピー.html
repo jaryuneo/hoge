@@ -1,0 +1,99 @@
+<!--bootstrapをダウンロードしないとフォントなど反映されないので注意。-->
+<!--https://www.ipentec.com/document/html-css-bootstrap-grid-options-->
+<!--https://webst8.com/blog/css-bootstrap4-howto/-->
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width-device-width, initial-scale=1.0" />
+        <title>ブラウザ上付近にタイトルが表示される</title>
+        <!--以下おまじない。popper,jqueryはネットから拝借しているのでそのurlを記入しないといけない。-->
+        <link href="{%static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                <div class="col-10">
+                    <!--jumbotronは画面サイズの調整に使用する。-->
+                    <div class="jumbotron mt-3" style="width: 100%;">
+                        <h1 class="display-4">大見出しTOP</h1>
+                        <p class="lead">ここにテキストを入力すると反映される。</p>
+                        <!--hrはホリゾンタルラインの略で、横線を書く。-->
+                        <hr class="my-4" />
+                        <font color="green">がんばれ！！！君ならいける！！！</font><br><br>
+                        <a class="btn btn-warning btn-lg m-2" role="button" href="https://en.wikipedia.org/wiki/Topological_insulator#:~:text=A%20topological%20insulator%20is%20a%20material%20that%20behaves,only%20move%20along%20the%20surface%20of%20the%20material.">専門①</a>
+                        <a class="btn btn-warning btn-lg m-2" role="button" href="https://www.nist.gov/programs-projects/theory-spin-orbit-torque#:~:text=In%20the%20phenomenon%20known%20as%20spin-orbit%20torque%2C%20an,kind%20of%20magnetic%20memory%20and%20other%20electronic%20devices.">専門②</a>
+                        <a class="btn btn-warning btn-lg m-2" role="button" href="C:\Users\scat\Desktop\DC2_202213517MASUDA_naiyo_05141946.pdf">ファイルテスト</a> 
+                        <hr class="my-4" />
+                        <p>挿入したい文字列を選択してください。</p>
+                        <!--brタグは改行を表す。-->
+                        <input type="text" size="50" id="input_form">
+                        <button type="button" onclick="clickBtn()">送信</button>
+                        <!--scriptタグはJavaとかを埋め込む。-->
+                        <!-- https://qiita.com/kkkei257/items/b3292b443699ecfb148f -->
+                        <script>
+                            function clickBtn() {
+                            var txt = document.getElementById("input_form").value;
+                            $.ajax({
+                                url: "{% url 'myapp:call_write_data' %}",
+                                method: 'GET',
+                                data: {"input_data": txt},
+                                dataType: "text",
+                                contentType: "application/json",
+                                beforeSend: function(xhr, settings) {
+                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                                }
+                                },
+                                error: function(xhr, status, error) {
+                                console.log("error")
+                                }
+                            })
+                            .done(function(data) {
+                                console.log("Success"); 
+                            });
+
+                            // csrf_tokenの取得に使う
+                            function getCookie(name) {
+                                var cookieValue = null;
+                                if (document.cookie && document.cookie !== '') {
+                                var cookies = document.cookie.split(';');
+                                for (var i = 0; i < cookies.length; i++) {
+                                    var cookie = jQuery.trim(cookies[i]);
+                                    // Does this cookie string begin with the name we want?
+                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                    break;
+                                    }
+                                }
+                                }
+                                return cookieValue;
+                            }
+
+                            // ヘッダにcsrf_tokenを付与する関数
+                            function csrfSafeMethod(method) {
+                                // these HTTP methods do not require CSRF protection
+                                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                            };
+                            }
+                        </script>
+                        <br>
+                        <br>
+                        <img src="{{response}}" width=400 height=400>
+                    </div>
+                </div>
+                <div class="col-1"></div>
+            </div>
+        </div>
+    <script src="{%static 'js/jquery-3.6.0.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="{%static 'js/bootstrap.min.js' %}"></script>
+    </body>
+</html>
+<!--
+こんな表記でコメントアウト可能
+-->

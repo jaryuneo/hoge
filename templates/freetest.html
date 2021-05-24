@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width-device-width, initial-scale=1.0" />
+        <title>ajaxによる非同期通信出力テスト</title>
+        <!--以下おまじない。popper,jqueryはネットから拝借しているのでそのurlを記入しないといけない。-->
+        <link href="{%static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+           <div class="container">
+            <div class="row">
+                <div class="col-12">
+                <div class="col-10">
+                    <!--jumbotronは画面サイズの調整に使用する。-->
+                    <div class="jumbotron mt-3" style="width: 100%;">
+                        <font face='Impact'><h1 class="display-4">Golden Ratio calc. by AJAX & JSON!!</h1></font>
+                        <hr class="my-4" />
+                        <font size="5">黄金比計算シート</font><br>
+                        <!-- ここから構文を書く。囲んでいれば、普通にif文など回すことができる。 -->
+                        <!--<p><a href="% url 'myapp:test2' pk=file.id %"><font size=6>メインに戻る</a></p> -->
+                        <br>
+                        <p>数字iを入力すると、i番目とi-1番目から黄金比を計算します。</p>
+                        <a href="https://ja.wikipedia.org/wiki/%E9%BB%84%E9%87%91%E6%AF%94" target="blank">wikipediaによる説明</a>
+                        <br><br>
+                        <input type="number" size="50" id="input_form">
+                        <button type="button" onclick="clickBtn()">計算</button>
+                        <br><br>
+                        <font size="4"><div id='result'>黄金比：</div></font>
+                        <!--ここからajax(非同期式(画面遷移なし)JavaScript & XML (Extensible Markup Language,HTMLの仲間))を記述。-->
+                        <script>
+                            //scriptタグは無指名だとJavaで記述しますよの意味.コメントアウトの方法も変わる。
+                            function clickBtn(){
+                                //Java10からvarによる型推論ができるようになったらしい。やったぜ。
+                                var txt = document.getElementById("input_form").value;
+                                //$('#result').text('計算結果：')
+                                $.ajax({
+                                    url: "{% url 'ajaxtest:write' %}",
+                                    method: 'GET',
+                                    data: {"input_data": txt},
+                                    dataType:"text",
+                                    contentType: "application/json",
+                                    'success':function(response){  // 通信が成功したら動く処理で、引数には返ってきたレスポンスが入る
+                                            alert(response);  // レスポンスからデータを取り出してアラート
+                                            $('#result').text('黄金比：'+response);
+                                        },
+                                    //ここからはクロスサイトリクエストフォージェリ(forgery:偽造)を防ぐワンタイムトークン生成のコード？
+                                    //ログイン状態で悪意あるサイトを踏んだとき、保存されてるCookieからパスワード抜き取られる。
+                                    beforeSend: function(xhr, settings) {
+                                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                            xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                                        }
+                                        },
+                                        error: function(xhr, status, error) {
+                                            console.log("error");
+                                        }
+                                    })
+                                    .done(function(data) {
+                                        console.log("Success"); 
+                                    });
+                                    // csrf_tokenの取得に使う
+                                    function getCookie(name) {
+                                        var cookieValue = null;
+                                        if (document.cookie && document.cookie !== '') {
+                                        var cookies = document.cookie.split(';');
+                                        for (var i = 0; i < cookies.length; i++) {
+                                            var cookie = jQuery.trim(cookies[i]);
+                                            // Does this cookie string begin with the name we want?
+                                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                            break;
+                                            }
+                                        }
+                                        }
+                                        return cookieValue;
+                                    }
+
+                                    // ヘッダにcsrf_tokenを付与する関数
+                                    function csrfSafeMethod(method) {
+                                        // these HTTP methods do not require CSRF protection
+                                        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                                    };
+                                    }
+                        </script>
+                        <br><br>
+                    </div>
+                </div>
+                <div class="col-1"></div>
+            </div>
+        </div>
+    <script src="{%static 'js/jquery-3.6.0.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="{%static 'js/bootstrap.min.js' %}"></script>
+    </body>
+</html>

@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width-device-width, initial-scale=1.0" />
+        <title>CSVアップロードテスト</title>
+        <!--以下おまじない。popper,jqueryはネットから拝借しているのでそのurlを記入しないといけない。-->
+        <link href="{%static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+           <div class="container">
+            <div class="row">
+                <div class="col-12">
+                <div class="col-10">
+                    <!--jumbotronは画面サイズの調整に使用する。-->
+                    <div class="jumbotron mt-3" style="width: 100%;">
+                        <h1 class="display-4">ファイルアップローダ</h1>
+                        <hr class="my-4" />
+                        <font size="5">CSVファイルリスト</font><br>
+                        <br>
+                        <p>(※/freetestで黄金比の計算ページに飛びます。)</p>
+                        <!-- ここから構文を書く。囲んでいれば、普通にif文など回すことができる。 -->
+                        <!--<p><a href="freetest.html"><font size=6>ajaxテスト</a></p> -->
+                        {% if file_obj %}
+                            {% for file in file_obj %}
+                                <p>
+                                    {{ file.created_at }}
+                                    {{ file.title }}
+                                    <br>
+                                    <a href="{% url 'myapp:detail' pk=file.id %}"><font size=4>詳細</font></a>
+                                    &nbsp;&nbsp;<a href="{% url 'myapp:histtest' pk=file.id %}"><font size=4>  ヒストグラム表示</font></a>
+                                    <br><br>
+                                </p>
+                            {% endfor %}
+                        {%  else %}
+                            <font size="4">ファイル無</font>
+                        {% endif %}
+                        </font>
+                    </div>
+                </div>
+                <div class="col-1"></div>
+            </div>
+        </div>
+    <script src="{%static 'js/jquery-3.6.0.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="{%static 'js/bootstrap.min.js' %}"></script>
+    </body>
+</html>

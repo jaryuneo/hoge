@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+        <head>
+                <title>test</title>
+        </head>
+        <body>
+
+            <h2>ヒストグラム描画</h2>
+            <br>
+            <a href="{% url 'myapp:detail' pk=file_value.id %}">CSVテーブルに戻る</a><br>
+            <a href="{% url 'myapp:test2' %}">メインに戻る</a>
+            <br>
+
+            <!-- 各インスタンス属性の要素を取得 -->
+            <p>アップロード日：{{ file_value.created_at }}</p>
+            <p>ダウンロード：<a href="{{ file_value.upload_dir.url }}">{{file_value.file_name }}</a></p>
+            <br>
+            <!-- 読み込んだCSVファイルの詳細をヒストグラム化する。 -->
+            <img src="data:image/png;base64, {{ response }}" width=800 height=600>
+        </body>
+</html>
