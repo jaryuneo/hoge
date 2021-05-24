@@ -10,6 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+#参考になるurl
+#https://qiita.com/NGOhiroshi/items/67b5ce187f3eeaa97581
+#https://qiita.com/sodaihirai/items/caf8d39d314fa53db4db
+#https://qiita.com/hatorijobs/items/1cae1946656ece954c63
+#https://deepblue-ts.co.jp/git/git-push-error/
+
 from pathlib import Path
 import os
 
@@ -79,7 +85,7 @@ WSGI_APPLICATION = 't.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': str(BASE_DIR / 'db.sqlite3'),
     }
 }
 
